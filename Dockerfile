@@ -1,7 +1,6 @@
 FROM golang AS builder1
 
 ENV GO111MODULE=on \
-    CGO_ENABLED=1 \
     GOOS=linux \
     GOPROXY=https://goproxy.cn,direct
 
