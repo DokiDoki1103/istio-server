@@ -31,7 +31,7 @@ type Client struct {
 func NewClient() (*Client, error) {
 	var url = os.Getenv("PROM_URL")
 	if url == "" {
-		url = "prometheus.istio-system.svc.cluster.local:9090"
+		url = "http://prometheus.istio-system.svc.cluster.local:9090"
 	}
 	cfg := config.PrometheusConfig{
 		URL: url,
