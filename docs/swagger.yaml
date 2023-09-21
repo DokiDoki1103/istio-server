@@ -1,0 +1,52 @@
+info:
+  contact: {}
+paths:
+  /api/config/degrade/{ns}/{name}:
+    delete:
+      parameters:
+      - description: 命名空间
+        in: path
+        name: ns
+        required: true
+        type: string
+      - default: gr7b1231
+        description: 名称
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: 成功
+          schema:
+            type: object
+        "500":
+          description: 熔断规则删除失败
+          schema:
+            additionalProperties: true
+            type: object
+    get:
+      parameters:
+      - default: zxy
+        description: 命名空间
+        in: path
+        name: ns
+        required: true
+        type: string
+      - default: gr7b1231
+        description: 名称
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: 熔断规则查询失败
+          schema:
+            additionalProperties: true
+            type: object
+swagger: "2.0"
