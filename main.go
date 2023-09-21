@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"istio-server/kubernetes"
@@ -8,6 +9,12 @@ import (
 	"istio-server/router"
 	"log"
 )
+
+//go:embed web/dist
+var buildFS embed.FS
+
+//go:embed web/dist/index.html
+var indexPage []byte
 
 func main() {
 	_, err := kubernetes.NewClientFromConfig()
@@ -24,7 +31,7 @@ func main() {
 
 	// 创建http服务
 	server := gin.Default()
-	router.SetRouter(server)
+	router.SetRouter(server, buildFS, indexPage)
 	err = server.Run(":8000")
 	if err != nil {
 		log.Fatal(err)
