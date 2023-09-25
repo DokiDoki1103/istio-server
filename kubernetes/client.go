@@ -26,10 +26,7 @@ type K8SClient struct {
 	istioClientset istio.Interface
 	restConfig     *rest.Config
 	ctx            context.Context
-	isOpenShift    *bool
-	isGatewayAPI   *bool
 	gatewayapi     gatewayapiclient.Interface
-	isIstioAPI     *bool
 }
 
 func NewClientFromConfig() (*K8SClient, error) {

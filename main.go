@@ -2,9 +2,9 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"istio-server/kubernetes"
+	"istio-server/model"
 	"istio-server/prometheus"
 	"istio-server/router"
 	"log"
@@ -17,19 +17,35 @@ var buildFS embed.FS
 var indexPage []byte
 
 func main() {
-	_, err := kubernetes.NewClientFromConfig()
-
+	// Initialize Kubernetes Client
+	k8sClient, err := kubernetes.NewClientFromConfig()
 	if err != nil {
-		fmt.Println("Failed to create istio c" + err.Error())
 		log.Fatalf("Failed to create istio client: %s", err)
 	}
 
+	// Initialize Prometheus Client
 	_, err = prometheus.NewClient()
 	if err != nil {
 		log.Fatalf("Failed to create prometheus client: %s", err)
 	}
 
-	// 创建http服务
+	// Initialize SQL Database
+	pwd, err := k8sClient.GetMySQLPassword()
+	if err != nil {
+		log.Fatalf("Failed to get MySQL password: %s", err)
+	}
+	err = model.InitDB(pwd)
+	if err != nil {
+		log.Fatalf("Failed to create SQL client: %s", err)
+	}
+	defer func() {
+		err := model.CloseDB()
+		if err != nil {
+			log.Fatalf("Failed to close SQL client: %s", err)
+		}
+	}()
+
+	// Initialize Gin Router
 	server := gin.Default()
 	router.SetRouter(server, buildFS, indexPage)
 	err = server.Run(":8000")

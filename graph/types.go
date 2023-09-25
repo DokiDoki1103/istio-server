@@ -1,6 +1,7 @@
 package graph
 
 type Node struct {
+	Name         string `json:"name"`
 	NodeType     string `json:"nodeType"`
 	Workload     string `json:"workload"`
 	Version      string `json:"version"`

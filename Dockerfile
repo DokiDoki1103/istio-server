@@ -14,5 +14,4 @@ FROM alpine
 ENV PORT=8000
 COPY --from=builder1 /build/istio-server /
 EXPOSE 8000
-WORKDIR /data
 ENTRYPOINT ["/istio-server"]

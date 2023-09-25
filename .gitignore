@@ -1,2 +1,3 @@
 /config.k8s
 /.idea
+/prometheus/my_test.go

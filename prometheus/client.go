@@ -22,7 +22,7 @@ func GetPrometheusClient() *Client {
 }
 
 type Client struct {
-	ClientInterface
+	PromClientInterface
 	p8s api.Client
 	api prom_v1.API
 	ctx context.Context
@@ -50,7 +50,7 @@ func NewClientForConfig(cfg config.PrometheusConfig) (*Client, error) {
 	return client, nil
 }
 
-type ClientInterface interface {
+type PromClientInterface interface {
 	GenGraph(ns string, app string) (g graph.Graph, err error)
 
 	FetchHistogramRange(metricName, labels, grouping string, q *RangeQuery) Histogram
@@ -158,6 +158,7 @@ func (in *Client) FetchNodeMetricValue(serviceAlias string) (string, string) {
 	//} else {
 	//	fmt.Println(err.Error())
 	//}
+	fmt.Println(formatStringToInt(RequestTimeValue))
 	return formatStringToInt(RequestTimeValue), formatStringToInt(RequestRateValue)
 
 }

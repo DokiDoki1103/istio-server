@@ -3,6 +3,7 @@ package prometheus
 import (
 	"encoding/json"
 	"fmt"
+	"istio-server/kubernetes"
 	"testing"
 	"time"
 )
@@ -40,9 +41,22 @@ func TestClient(*testing.T) {
 
 func TestDep(*testing.T) {
 	_, _ = NewClient()
-	//fmt.Println(cli)
 	var client = GetPrometheusClient()
 
 	client.FetchNodeMetricValue("gr9efd6b")
 
+}
+
+func TestK8s(*testing.T) {
+
+	client, err := kubernetes.NewClientFromConfig()
+	if err != nil {
+		return
+	}
+	password, err := client.GetMySQLPassword()
+	if err != nil {
+		return
+
+	}
+	fmt.Println(password)
 }
