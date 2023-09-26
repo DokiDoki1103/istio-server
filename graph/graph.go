@@ -44,10 +44,15 @@ func AddEdge(value model.Value, edges []*Edge, nodeMap map[string]*Node) []*Edge
 			m := s.Metric
 			source := string(m["source_workload"])
 			dist := string(m["destination_workload"])
+			if "unknown" == source {
+				source = "istio-istio"
+			}
+
 			id := fmt.Sprintf("%x", md5.Sum([]byte(source+dist)))
-			if "unknown" == source || "unknown" == dist || idMap[id] {
+			if "unknown" == dist || idMap[id] {
 				continue
 			}
+
 			idMap[id] = true
 			e := &Edge{
 				ID:       id,
