@@ -13,10 +13,12 @@ func AddNode(value model.Value, nodeMap map[string]*Node) {
 		vector := value.(model.Vector)
 		for _, s := range vector {
 			m := s.Metric
+			if m["destination_workload"] == "unknown" {
+				continue
+			}
 			key := string(m["service_istio_io_canonical_name"])
 			n := &Node{
-				ID:           key,
-				Workload:     string(m["service_istio_io_canonical_name"]),
+				Workload:     key,
 				NodeType:     "",
 				Version:      string(m["version"]),
 				TenantID:     string(m["tenant_id"]),
