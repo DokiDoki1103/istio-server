@@ -15,6 +15,7 @@ func AddNode(value model.Value, nodeMap map[string]*Node) {
 			m := s.Metric
 			key := string(m["service_istio_io_canonical_name"])
 			n := &Node{
+				ID:           key,
 				Workload:     string(m["service_istio_io_canonical_name"]),
 				NodeType:     "",
 				Version:      string(m["version"]),
