@@ -30,11 +30,7 @@ func main() {
 	}
 
 	// Initialize SQL Database
-	pwd, err := k8sClient.GetMySQLPassword()
-	if err != nil {
-		log.Fatalf("Failed to get MySQL password: %s", err)
-	}
-	err = model.InitDB(pwd)
+	err = model.InitDB(k8sClient)
 	if err != nil {
 		log.Fatalf("Failed to create SQL client: %s", err)
 	}
