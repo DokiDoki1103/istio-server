@@ -12,11 +12,11 @@ RUN go build -ldflags "-s -w -extldflags '-static'" -o istio-server
 
 FROM alpine
 ENV PORT=8000
-RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache ca-certificates tzdata \
-    && update-ca-certificates 2>/dev/null || true
-ENV TZ="Asia/Shanghai"
+#RUN apk update \
+#    && apk upgrade \
+#    && apk add --no-cache ca-certificates tzdata \
+#    && update-ca-certificates 2>/dev/null || true
+#ENV TZ="Asia/Shanghai"
 COPY --from=builder1 /build/istio-server /
 EXPOSE 8000
 ENTRYPOINT ["/istio-server"]
