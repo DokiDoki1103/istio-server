@@ -23,7 +23,7 @@ func (q *RangeQuery) FillDefaults() {
 	q.Start = q.End.Add(-30 * time.Minute)
 	q.Step = 15 * time.Second
 	q.RateInterval = "1m"
-	q.RateFunc = "irate"
+	q.RateFunc = "rate"
 	q.Avg = true
 }
 
