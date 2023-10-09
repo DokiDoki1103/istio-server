@@ -86,22 +86,19 @@ func (in *Client) FetchHistogramValues(metricName, labels, grouping, rateInterva
 	return fetchHistogramValues(in.ctx, in.api, metricName, labels, grouping, rateInterval, avg, quantiles, queryTime)
 }
 func (in *Client) GenGraph(ns string, app string) (g graph.Graph, err error) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	nodeMap := make(map[string]*graph.Node)
 	nodeMap["istio-istio"] = &graph.Node{
 		Workload: "istio-istio",
 		NodeType: "gateway",
 	}
 
-	valueHttp, _, err := in.api.Query(ctx, fmt.Sprintf(`istio_requests_total{namespace="%s",rainbond_app="%s"}`, ns, app), time.Now())
+	valueHttp, _, err := in.api.Query(in.ctx, fmt.Sprintf(`istio_requests_total{namespace="%s",rainbond_app="%s"}`, ns, app), time.Now())
 	if err != nil {
 		return g, err
 	}
 	graph.AddNode(valueHttp, nodeMap)
 
-	valueTcp, _, err := in.api.Query(ctx, fmt.Sprintf(`istio_tcp_sent_bytes_total{namespace="%s",rainbond_app="%s"}`, ns, app), time.Now())
+	valueTcp, _, err := in.api.Query(in.ctx, fmt.Sprintf(`istio_tcp_sent_bytes_total{namespace="%s",rainbond_app="%s"}`, ns, app), time.Now())
 	if err != nil {
 		return g, err
 	}
