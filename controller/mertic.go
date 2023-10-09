@@ -90,7 +90,13 @@ func GetHttpTime(c *gin.Context) {
 	label := fillQueryLabel(c)
 
 	metric := client.FetchHistogramRange("istio_request_duration_milliseconds", label.Build(), "", queryRange)
-	c.JSON(http.StatusOK, metric["avg"].Matrix[0].Values)
+
+	if len(metric["avg"].Matrix) > 0 {
+		c.JSON(http.StatusOK, metric["avg"].Matrix[0].Values)
+	} else {
+		c.JSON(http.StatusOK, []model.SamplePair{})
+	}
+
 }
 
 func GetHttpBytes(c *gin.Context) {
