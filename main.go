@@ -2,13 +2,28 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"istio-server/kubernetes"
 	"istio-server/model"
 	"istio-server/prometheus"
 	"istio-server/router"
 	"log"
+	"net/http"
+	"runtime/debug"
 )
+
+func ErrorHandler(c *gin.Context) {
+	// 通过 recover 捕获任何发生的 panic
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+			debug.PrintStack() // 打印堆栈信息
+			c.String(http.StatusInternalServerError, "服务器开小差了,请稍后再试")
+		}
+	}()
+	c.Next()
+}
 
 //go:embed web/dist
 var buildFS embed.FS
@@ -43,6 +58,7 @@ func main() {
 
 	// Initialize Gin Router
 	server := gin.Default()
+	server.Use(ErrorHandler)
 	router.SetRouter(server, buildFS, indexPage)
 	err = server.Run(":8000")
 	if err != nil {
