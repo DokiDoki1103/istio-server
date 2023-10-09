@@ -69,6 +69,10 @@ func GetHttpQps(c *gin.Context) {
 
 	metric := client.FetchRateRange("istio_requests_total", []string{label.Build()}, "", queryRange)
 
+	if metric.Err != nil {
+		c.JSON(http.StatusBadRequest, metric.Err)
+		return
+	}
 	if len(metric.Matrix) > 0 {
 		c.JSON(http.StatusOK, metric.Matrix[0].Values)
 	} else {
