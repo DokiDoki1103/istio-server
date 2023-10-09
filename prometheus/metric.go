@@ -6,6 +6,7 @@ import (
 	prom_v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/util/json"
 	"log"
 	"strings"
 	"time"
@@ -14,6 +15,10 @@ import (
 func fetchRange(ctx context.Context, api prom_v1.API, query string, bounds prom_v1.Range) Metric {
 	fmt.Println(query)
 	result, warnings, err := api.QueryRange(ctx, query, bounds)
+
+	marshal, _ := json.Marshal(result)
+	fmt.Println(string(marshal))
+
 	if len(warnings) > 0 {
 		log.Println("fetchRange. Prometheus Warnings", strings.Join(warnings, ","))
 	}
