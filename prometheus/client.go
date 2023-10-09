@@ -18,11 +18,7 @@ var (
 )
 
 func GetPrometheusClient() *Client {
-	client, err := NewClient()
-	if err != nil {
-		return nil
-	}
-	return client
+	return promClient
 }
 
 type Client struct {
