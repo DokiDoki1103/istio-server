@@ -115,6 +115,13 @@ func GetHttpBytes(c *gin.Context) {
 	request := client.FetchRateRange("istio_request_bytes_sum", []string{label.Build()}, "", queryRange)
 	response := client.FetchRateRange("istio_response_bytes_sum", []string{label.Build()}, "", queryRange)
 
+	if len(request.Matrix) == 0 || len(response.Matrix) == 0 {
+		c.JSON(http.StatusOK, HttpBytesRes{
+			Request:  []model.SamplePair{},
+			Response: []model.SamplePair{},
+		})
+		return
+	}
 	c.JSON(http.StatusOK, HttpBytesRes{
 		Request:  request.Matrix[0].Values,
 		Response: response.Matrix[0].Values,
