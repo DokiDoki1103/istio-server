@@ -17,7 +17,7 @@ func fetchRange(ctx context.Context, api prom_v1.API, query string, bounds prom_
 	result, warnings, err := api.QueryRange(ctx, query, bounds)
 
 	marshal, _ := json.Marshal(result)
-	fmt.Println(string(marshal))
+	fmt.Println(warnings == nil, err == nil, string(marshal))
 
 	if len(warnings) > 0 {
 		log.Println("fetchRange. Prometheus Warnings", strings.Join(warnings, ","))
