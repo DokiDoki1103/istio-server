@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/common/model"
 	"istio-server/prometheus"
+	"k8s.io/apimachinery/pkg/util/json"
 	"net/http"
 	"strconv"
 	"time"
@@ -69,6 +71,12 @@ func GetHttpQps(c *gin.Context) {
 
 	metric := client.FetchRateRange("istio_requests_total", []string{label.Build()}, "", queryRange)
 
+	marshal, err := json.Marshal(metric)
+	if err != nil {
+		return
+
+	}
+	fmt.Println(string(marshal))
 	if metric.Err != nil {
 		c.JSON(http.StatusBadRequest, metric.Err)
 		return
