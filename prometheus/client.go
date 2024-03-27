@@ -129,7 +129,7 @@ func (in *Client) FetchNodeMetricValue(serviceAlias string) (string, string) {
 	lb.Add("service_alias", serviceAlias)
 
 	RequestRate, _, err := in.api.Query(in.ctx, fmt.Sprintf(`sum(irate(istio_requests_total%s[%s]))`, lb.Build(), rateInterval), time.Now())
-	if err == nil {
+	if err == nil && len(RequestRate.(model.Vector)) > 0 {
 		RequestRateValue = RequestRate.(model.Vector)[0].Value.String()
 	}
 
@@ -137,7 +137,7 @@ func (in *Client) FetchNodeMetricValue(serviceAlias string) (string, string) {
 		"istio_request_duration_milliseconds", lb.Build(), rateInterval, "istio_request_duration_milliseconds", lb.Build(), rateInterval)
 
 	RequestTime, _, err := in.api.Query(in.ctx, query, time.Now())
-	if err == nil {
+	if err == nil && len(RequestTime.(model.Vector)) > 0 {
 		RequestTimeValue = RequestTime.(model.Vector)[0].Value.String()
 	}
 
